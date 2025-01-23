@@ -8,7 +8,14 @@
 
   <ItemGroup>
     <Folder Include="DTOs\" />
+    <Folder Include="EventHandlers\" />
     <Folder Include="UseCases\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Domain\Domain.csproj" />
+    <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
+    <ProjectReference Include="..\Shared\Shared.csproj" />
   </ItemGroup>
 
 </Project>

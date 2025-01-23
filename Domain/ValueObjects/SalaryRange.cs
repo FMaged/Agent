@@ -1,12 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace Domain.ValueObjects
 {
-    internal class SalaryRange
+    public class SalaryRange
     {
+        public decimal Minimum { get;}
+        public decimal Maximum { get;}
+
+        public SalaryRange(decimal minimum, decimal maximum)
+        {
+            Minimum = minimum;
+            Maximum = maximum;
+
+        }
+
     }
 }

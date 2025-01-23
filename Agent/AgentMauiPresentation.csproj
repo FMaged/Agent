@@ -68,4 +68,8 @@
 	  <Folder Include="ViewModels\" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <ProjectReference Include="..\Application\Application.csproj" />
+	</ItemGroup>
+
 </Project>
