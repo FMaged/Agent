@@ -92,7 +92,7 @@ namespace Domain.Entities
                 throw new InvalidPersonException("Last name must be 1-50 characters");
 
         }
-        private void ValidateBirth(DateTime dateOfBirth)
+        private static void ValidateBirth(DateTime dateOfBirth)
         {
             if (dateOfBirth > DateTime.Now.AddYears(-18))
                 throw new InvalidPersonException("Person must be at least 18 years old");
@@ -100,7 +100,7 @@ namespace Domain.Entities
                 throw new InvalidPersonException("Invalid date of birth");
             
         }
-        private eGender ValidateGender(eGender gender)
+        private static eGender ValidateGender(eGender gender)
         {
             return Enum.IsDefined(typeof(eGender), gender) ? gender : throw new InvalidPersonException("Invalid Gender");
         }
