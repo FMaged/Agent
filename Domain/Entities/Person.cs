@@ -1,4 +1,5 @@
-﻿using Domain.ValueObjects;
+﻿using Domain.Enums;
+using Domain.ValueObjects;
 
 namespace Domain.Entities
 {
@@ -8,12 +9,13 @@ namespace Domain.Entities
         public string First_Name { get;}
         public string Last_Name { get;}
         public DateTime Date_Of_Birth { get;}
-        public char Gender { get;}
+        public eGender Gender { get;}
         public string Email { get; set; }
         public string Phone_Number { get; set; }
         public int address { get; set; }
 
-        public Person(string firstName, string lastName, DateTime dateOfBirth,char gender, string email, string phoneNumber,int personAddress)
+
+        public Person(string firstName, string lastName, DateTime dateOfBirth,eGender gender, string email, string phoneNumber,int personAddress)
         {
 
             First_Name = firstName;
@@ -25,7 +27,7 @@ namespace Domain.Entities
             address = personAddress;
 
         }
-        public Person(int personID, string firstName, string lastName, DateTime dateOfBirth, char gender, string email, string phoneNumber, 
+        public Person(int personID, string firstName, string lastName, DateTime dateOfBirth, eGender gender, string email, string phoneNumber, 
                         int personAddress)
         {
             Person_ID = personID;

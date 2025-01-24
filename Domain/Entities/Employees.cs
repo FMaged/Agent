@@ -11,7 +11,6 @@ namespace Domain.Entities
 
         public Employees(int employees_ID,string position, eEmployeesStatus status,int employees_person_ID)
         {
-
             Employees_ID = employees_ID;
             Position = position;
             Status = status;
@@ -19,7 +18,6 @@ namespace Domain.Entities
         }
         public Employees(string position, eEmployeesStatus status, int employees_person_ID)
         {
-
             Position = position;
             Status = status;
             Employees_Person_ID = employees_person_ID;
