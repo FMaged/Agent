@@ -1,6 +1,8 @@
-﻿namespace Domain.Entities
+﻿using Domain.Exceptions;
+
+namespace Domain.Entities
 {
-    internal class Address
+    public class Address
     {
         public int Address_ID { get; private set; }
         public string PLZ { get; private set; }
@@ -8,7 +10,15 @@
         public string Street { get; private set; }
         public string House_Number { get; private set; }
 
-        private Address() { }
+        private Address() 
+        {
+            Address_ID = default!;
+            PLZ = default!;
+            Town = default!;
+            Street = default!;
+            House_Number = default!;
+
+        }
         public static Address Create(string plz, string town, string street, string houseNumber)
         {
             Validate(plz, town, street, houseNumber);
@@ -33,8 +43,8 @@
         }
         private static void Validate(string plz, string town, string street, string houseNumber)
         {
-            if (string.IsNullOrWhiteSpace(plz)) throw new ArgumentException("PLZ is required");
-            if (plz.Length != 5 || !int.TryParse(plz, out _)) throw new ArgumentException("PLZ must be 5 digits");
+            if (string.IsNullOrWhiteSpace(plz)) throw new InvalidAddressException("PLZ is required");
+            if (plz.Length != 5 || !int.TryParse(plz, out _)) throw new InvalidAddressException("PLZ must be 5 digits");
             // validation...
         }
 

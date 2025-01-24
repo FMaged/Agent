@@ -2,7 +2,7 @@
 
 namespace Domain.ValueObjects
 {
-    internal class PhoneNumber
+    public class PhoneNumber
     {
         public string Value { get;}
         public PhoneNumber (string value)
