@@ -4,8 +4,9 @@ using System.Globalization;
 
 namespace Domain.Entities
 {
-    public class JobApplications
+    public class JobApplications:BaseEntity<int>
     {
+        public override int Id => Application_ID;
         public int Application_ID { get; private set; }
         public int Job_ID { get; private set; }
         public int Employers_ID { get; private set; }
@@ -13,17 +14,17 @@ namespace Domain.Entities
         public DateTime Application_Date { get; private set; }
         public eApplicationsStatus Status { get; private set; }
 
-        private JobApplications() 
+        private JobApplications()
         {
-            Application_ID =default!;
-            Job_ID =default!;
-            Employers_ID =default!;
-            Employee_ID =default!;
-            Application_Date =default!;
+            Application_ID = default!;
+            Job_ID = default!;
+            Employers_ID = default!;
+            Employee_ID = default!;
+            Application_Date = default!;
             Status = default!;
         }
 
-        private JobApplications(int application_ID, int job_ID, int employers_ID, int employee_ID, DateTime application_Date, 
+        private JobApplications(int application_ID, int job_ID, int employers_ID, int employee_ID, DateTime application_Date,
                                 eApplicationsStatus status)
         {
             ValidateID(application_ID);
@@ -53,7 +54,7 @@ namespace Domain.Entities
             Application_Date = application_Date;
             Status = status;
         }
-        
+
         public static JobApplications FromDatabase(int application_ID, int job_ID, int employers_ID, int employee_ID, DateTime application_Date,
                                                     eApplicationsStatus status)
         {
@@ -87,9 +88,9 @@ namespace Domain.Entities
         }
         private void ValidateStatus(eApplicationsStatus status)
         {
-            if(!Enum.IsDefined(typeof(eApplicationsStatus), status))
+            if (!Enum.IsDefined(typeof(eApplicationsStatus), status))
                 throw new InvalidJobApplicationException("Invalid Status");
-            
+
 
         }
 

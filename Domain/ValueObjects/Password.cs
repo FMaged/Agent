@@ -3,9 +3,9 @@ using System.Text.RegularExpressions;
 
 namespace Domain.ValueObjects
 {
-    public class Password
+    public class Password:BaseObject
     {
-        public string Value { get;}
+        public string Value { get; }
         public Password(string plainPassword)
         {
             if (string.IsNullOrWhiteSpace(plainPassword))
@@ -13,9 +13,9 @@ namespace Domain.ValueObjects
             if (plainPassword.Length < 8 || plainPassword.Length > 20)
                 throw new InvalidUserException("Password must be 8-20 characters");
             var pattern = @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$";
-            if(!Regex.IsMatch(plainPassword, pattern))
+            if (!Regex.IsMatch(plainPassword, pattern))
                 throw new InvalidUserException("Password must contain uppercase, lowercase, number, and special character");
-            
+
             Value = HashPassword(plainPassword);
         }
         private string HashPassword(string plainPassword)
@@ -24,10 +24,9 @@ namespace Domain.ValueObjects
             throw new NotImplementedException();
         }
 
-
-
-
-
-
+        protected override IEnumerable<object> GetEqualityComponents()
+        {
+            yield return Value;
+        }
     }
 }

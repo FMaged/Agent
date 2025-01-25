@@ -1,8 +1,6 @@
-﻿
-
-namespace Domain.Exceptions
+﻿namespace Domain.Exceptions
 {
-    internal class InvalidPhoneNumberException:DomainException
+    internal class InvalidPhoneNumberException : DomainException
     {
         public InvalidPhoneNumberException(string message) : base(message) { }
     }

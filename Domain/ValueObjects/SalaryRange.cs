@@ -1,19 +1,17 @@
-﻿
-
-using Domain.Exceptions;
+﻿using Domain.Exceptions;
 
 namespace Domain.ValueObjects
 {
-    public class SalaryRange
+    public class SalaryRange:BaseObject
     {
-        public decimal Minimum { get;}
-        public decimal Maximum { get;}
+        public decimal Minimum { get; }
+        public decimal Maximum { get; }
 
         public SalaryRange(decimal minimum, decimal maximum)
         {
             if (Minimum > Maximum)
                 throw new InvalidJobException("Minimum salary cannot be greater than maximum salary");
-            if (Minimum < 0||Maximum<0)
+            if (Minimum < 0 || Maximum < 0)
                 throw new InvalidJobException("Salary values must be non-negative");
 
             Minimum = minimum;
@@ -21,5 +19,11 @@ namespace Domain.ValueObjects
 
         }
 
+        protected override IEnumerable<object> GetEqualityComponents()
+        {
+            yield return Minimum;
+            yield return Maximum;
+            
+        }
     }
 }

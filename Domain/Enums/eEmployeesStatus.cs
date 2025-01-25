@@ -2,10 +2,10 @@
 {
     public enum eEmployeesStatus
     {
-        Active,       
-        Inactive,     
-        OnLeave,      
-        Terminated,     
+        Active,
+        Inactive,
+        OnLeave,
+        Terminated,
         Retired
 
 

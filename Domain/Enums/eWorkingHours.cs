@@ -1,13 +1,11 @@
-﻿
-
-namespace Domain.Enums
+﻿namespace Domain.Enums
 {
     public enum eWorkingHours
     {
-        Morning,   
-        Afternoon, 
-        Evening,   
-        Night,     
+        Morning,
+        Afternoon,
+        Evening,
+        Night,
         Flexible
 
     }

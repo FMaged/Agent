@@ -1,13 +1,11 @@
-﻿
-
-using Domain.Exceptions;
+﻿using Domain.Exceptions;
 using System.Text.RegularExpressions;
 
 namespace Domain.ValueObjects
 {
-    public class UserName
+    public class UserName:BaseObject
     {
-        public string Value { get;}
+        public string Value { get; }
 
         public UserName(string value)
         {
@@ -27,6 +25,9 @@ namespace Domain.ValueObjects
 
         }
 
-
+        protected override IEnumerable<object> GetEqualityComponents()
+        {
+            yield return Value;   
+         }
     }
 }

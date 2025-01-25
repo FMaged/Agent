@@ -1,8 +1,6 @@
-﻿
-
-namespace Domain.Exceptions
+﻿namespace Domain.Exceptions
 {
-    internal class InvalidEmailException:DomainException
+    internal class InvalidEmailException : DomainException
     {
         public InvalidEmailException(string message) : base(message) { }
     }

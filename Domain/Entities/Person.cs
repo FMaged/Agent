@@ -1,11 +1,13 @@
-﻿using Domain.Enums;
-using Domain.Exceptions;
+﻿
 using Domain.ValueObjects;
+using Domain.Exceptions;
+using Domain.Enums;
 
 namespace Domain.Entities
 {
-    public class Person
+    public class Person:BaseEntity<int>
     {
+        public override int Id => Person_ID; 
         public int Person_ID { get; private set; }
         public string First_Name { get; private set; }
         public string Last_Name { get; private set; }
@@ -13,39 +15,50 @@ namespace Domain.Entities
         public eGender Gender { get; private set; }
         public Email email { get; private set; }
         public PhoneNumber Phone_Number { get; private set; }
-        public Address address { get; private set; } 
+        public Address address { get; private set; }
 
-        private Person() { }
-        private Person(string firstName, string lastName, DateTime dateOfBirth,eGender gender, Email email, PhoneNumber phoneNumber,Address personAddress)
+        private Person() 
+        {
+            Person_ID = default!;
+            First_Name = default!;
+            Last_Name = default!;
+            Date_Of_Birth = default!;
+            Gender = default!;
+            email = default!;
+            Phone_Number = default!;
+            address = default!;
+
+        }
+        private Person(string firstName, string lastName, DateTime dateOfBirth, eGender gender, Email email, PhoneNumber phoneNumber, Address personAddress)
         {
             ValidateName(firstName, lastName);
             ValidateBirth(dateOfBirth);
-            this.First_Name = firstName;
-            this.Last_Name = lastName;
-            this.Date_Of_Birth = dateOfBirth;
-            this.Gender = ValidateGender(gender);
+            First_Name = firstName;
+            Last_Name = lastName;
+            Date_Of_Birth = dateOfBirth;
+            Gender = ValidateGender(gender);
             this.email = email;
-            this.Phone_Number = phoneNumber;
-            this.address = personAddress;
+            Phone_Number = phoneNumber;
+            address = personAddress;
 
         }
-        private Person(int personID, string firstName, string lastName, DateTime dateOfBirth, eGender gender, Email email, PhoneNumber phoneNumber, 
+        private Person(int personID, string firstName, string lastName, DateTime dateOfBirth, eGender gender, Email email, PhoneNumber phoneNumber,
                         Address personAddress)
         {
             ValidateName(firstName, lastName);
-            ValidateBirth(dateOfBirth); 
-            this.Person_ID = personID;
-            this.First_Name = firstName;
-            this.Last_Name = lastName;
-            this.Date_Of_Birth =dateOfBirth;
-            this.Gender = ValidateGender(gender);
+            ValidateBirth(dateOfBirth);
+            Person_ID = personID;
+            First_Name = firstName;
+            Last_Name = lastName;
+            Date_Of_Birth = dateOfBirth;
+            Gender = ValidateGender(gender);
             this.email = email;
-            this.Phone_Number = phoneNumber;
-            this.address = personAddress;
+            Phone_Number = phoneNumber;
+            address = personAddress;
         }
 
         public static Person FromDatabase(int personID, string firstName, string lastName, DateTime dateOfBirth,
-                                         eGender gender, Email email, PhoneNumber phoneNumber,Address personAddress)
+                                         eGender gender, Email email, PhoneNumber phoneNumber, Address personAddress)
         {
 
             return new Person(personID, firstName, lastName, dateOfBirth, gender, email, phoneNumber, personAddress);
@@ -67,21 +80,18 @@ namespace Domain.Entities
         public static Person CreatePerson(string firstName, string lastName, DateTime dateOfBirth, eGender gender, Email email,
                                           PhoneNumber phoneNumber, Address personAddress)
         {
-            
+
             return new Person(firstName, lastName, dateOfBirth, gender, email, phoneNumber, personAddress);
 
 
         }
 
-        
-        public void UpdatePerson(string firstName,string lastName, Email email, PhoneNumber phoneNumber, Address personAddress)
+
+        public void UpdatePerson(string firstName, string lastName, Email email, PhoneNumber phoneNumber, Address personAddress)
         {
-            ValidateName(firstName, lastName);
-            First_Name = firstName;
-            Last_Name = lastName;
             this.email = email;
-            this.Phone_Number=phoneNumber;
-            this.address = personAddress;
+            Phone_Number = phoneNumber;
+            address = personAddress;
         }
 
         private static void ValidateName(string firstName, string lastName)
@@ -93,17 +103,17 @@ namespace Domain.Entities
 
         }
         private static void ValidateBirth(DateTime dateOfBirth)
-        {
+        {   
             if (dateOfBirth > DateTime.Now.AddYears(-18))
                 throw new InvalidPersonException("Person must be at least 18 years old");
             if (dateOfBirth < DateTime.Now.AddYears(-120))
                 throw new InvalidPersonException("Invalid date of birth");
-            
+
         }
         private static eGender ValidateGender(eGender gender)
         {
             return Enum.IsDefined(typeof(eGender), gender) ? gender : throw new InvalidPersonException("Invalid Gender");
         }
 
-    }   
+    }
 }

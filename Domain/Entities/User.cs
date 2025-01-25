@@ -1,11 +1,13 @@
-﻿using Domain.Enums;
+﻿using Domain.ValueObjects;
+using Domain.Entities;
+using Domain.Enums;
 using Domain.Exceptions;
-using Domain.ValueObjects;
 
-namespace Domain.Entities
+namespace Domain.user.Aggregate
 {
-    public class User
+    public class User:BaseEntity<int>
     {
+        public override int Id => UserID;
         public int UserID { get; private set; }
         public UserName userName { get; private set; }
         public Password PasswordHash { get; private set; }
@@ -13,7 +15,7 @@ namespace Domain.Entities
         public Person? Person { get; private set; }
 
         // Private constructor for ORM
-        private User() 
+        private User()
         {
             UserID = default!;
             userName = default!;
@@ -28,16 +30,16 @@ namespace Domain.Entities
         {
             if (role != eUserRole.Guest)
                 throw new InvalidUserException("This constructor is for Guest users only");
-            
+
             // maybe make a Table to store the Guests!
-            userName= default!;
+            userName = default!;
             PasswordHash = default!;
-            
+
             Role = role;
-            
+
         }
 
-        private User(int User_ID,UserName username, Password passwordHash, eUserRole role, Person person)
+        private User(int User_ID, UserName username, Password passwordHash, eUserRole role, Person person)
         {
             UserID = User_ID;
             userName = username ?? throw new ArgumentNullException(nameof(username));
@@ -55,7 +57,7 @@ namespace Domain.Entities
         }
         public static User FromDatabase(int User_ID, UserName username, Password passwordHash, eUserRole role, Person person)
         {
-           return new User(User_ID, username, passwordHash, role, person);
+            return new User(User_ID, username, passwordHash, role, person);
         }
 
         // Factory method for Guest users
@@ -70,7 +72,7 @@ namespace Domain.Entities
             Password passwordHash,
             Person person)
         {
-            return new User(username, passwordHash,eUserRole.User, person);
+            return new User(username, passwordHash, eUserRole.User, person);
         }
 
         // Domain behavior: Upgrade Guest to registered user

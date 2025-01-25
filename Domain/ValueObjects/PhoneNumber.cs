@@ -2,14 +2,16 @@
 
 namespace Domain.ValueObjects
 {
-    public class PhoneNumber
+    public class PhoneNumber:BaseObject
     {
-        public string Value { get;}
-        public PhoneNumber (string value)
+        public string CountryCode { get; }
+        public string Number { get; }
+        public PhoneNumber(string number , string countryCode)
         {
-            if (string.IsNullOrWhiteSpace(value))
+
+            if (string.IsNullOrWhiteSpace(number))
                 throw new InvalidPhoneNumberException("Phone number cannot be empty");
-            if (value.Length != 10)
+            if (number.Length != 10)
                 throw new InvalidPhoneNumberException("Phone number must be 10 digits");
             //Validate the New Value 
 
@@ -17,10 +19,15 @@ namespace Domain.ValueObjects
 
 
 
-
-            this.Value = value;
+            CountryCode = countryCode;
+            Number = number;
         }
 
-
+        // Compare both CountryCode and Number
+        protected override IEnumerable<object> GetEqualityComponents()
+        {
+            yield return CountryCode;
+            yield return Number;
+        }
     }
 }

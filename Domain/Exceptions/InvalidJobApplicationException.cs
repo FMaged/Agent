@@ -1,8 +1,6 @@
-﻿
-
-namespace Domain.Exceptions
+﻿namespace Domain.Exceptions
 {
-    internal class InvalidJobApplicationException:DomainException
+    internal class InvalidJobApplicationException : DomainException
     {
         public InvalidJobApplicationException(string message) : base(message) { }
     }

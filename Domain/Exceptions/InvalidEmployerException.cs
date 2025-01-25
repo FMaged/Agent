@@ -1,6 +1,4 @@
-﻿
-
-namespace Domain.Exceptions
+﻿namespace Domain.Exceptions
 {
     internal class InvalidEmployerException : DomainException
     {

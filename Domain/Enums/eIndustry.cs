@@ -1,20 +1,18 @@
-﻿
-
-namespace Domain.Enums
+﻿namespace Domain.Enums
 {
     public enum eIndustry
     {
-        IT,            
-        Healthcare,    
-        Construction,  
-        Education,     
-        Finance,       
-        Manufacturing, 
-        Retail,        
-        Hospitality,   
+        IT,
+        Healthcare,
+        Construction,
+        Education,
+        Finance,
+        Manufacturing,
+        Retail,
+        Hospitality,
         Transportation,
-        Energy,        
-        Agriculture,   
+        Energy,
+        Agriculture,
         Other
 
     }
