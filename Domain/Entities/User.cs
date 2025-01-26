@@ -79,7 +79,7 @@ namespace Domain.user.Aggregate
         public void Register(UserName username, Password passwordHash, Person person)
         {
             if (Role != eUserRole.Guest)
-                throw new InvalidUserException("Only Guest users can register");
+                throw InvalidUserException.InvalidRolePermition();
 
             userName = username ?? throw new ArgumentNullException(nameof(username));
             PasswordHash = passwordHash ?? throw new ArgumentNullException(nameof(passwordHash));
@@ -91,7 +91,7 @@ namespace Domain.user.Aggregate
         public void ChangeUsername(UserName newUsername)
         {
             if (Role == eUserRole.Guest)
-                throw new InvalidUserException("Guests cannot have a username");
+                throw InvalidUserException.InvalidRolePermition();
 
             userName = newUsername ?? throw new ArgumentNullException(nameof(newUsername));
         }
@@ -100,7 +100,7 @@ namespace Domain.user.Aggregate
         public void ChangePassword(Password newPasswordHash)
         {
             if (Role == eUserRole.Guest)
-                throw new InvalidUserException("Guests cannot have a password");
+                throw InvalidUserException.InvalidRolePermition();
 
             PasswordHash = newPasswordHash ?? throw new ArgumentNullException(nameof(newPasswordHash));
         }
@@ -108,7 +108,8 @@ namespace Domain.user.Aggregate
         // Validation logic
         private eUserRole ValidateRole(eUserRole role)
         {
-            return Enum.IsDefined(typeof(eUserRole), role) ? role : throw new InvalidUserException("Invalid user role");
+            return Enum.IsDefined(typeof(eUserRole), role) ? role : throw InvalidUserException.InvalidRolePermition();
+
         }
 
 

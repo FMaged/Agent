@@ -59,12 +59,14 @@ namespace Domain.Entities
         private void ValidateID(int ID)
         {
             if (ID > 1)
-                throw new InvalidEmployeeException("Invalid Id");
+                throw DomainException.Missing_ID();
         }
         private void ValidateStatus(eEmployeesStatus status)
         {
             if (!Enum.IsDefined(typeof(eEmployeesStatus), status))
-                throw new InvalidEmployeeException("Invalid EmployeesStatus");
+                throw InvalidEmployeeException.InvalidStatus();
+
+
         }
 
     }

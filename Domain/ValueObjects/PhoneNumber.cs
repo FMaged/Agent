@@ -10,9 +10,9 @@ namespace Domain.ValueObjects
         {
 
             if (string.IsNullOrWhiteSpace(number))
-                throw new InvalidPhoneNumberException("Phone number cannot be empty");
+                throw InvalidPhoneNumberException.MissingNumber();
             if (number.Length != 10)
-                throw new InvalidPhoneNumberException("Phone number must be 10 digits");
+                throw InvalidPhoneNumberException.InvalidNumber(number);
             //Validate the New Value 
 
 

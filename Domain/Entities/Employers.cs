@@ -30,6 +30,7 @@ namespace Domain.Entities
         private Employers(int employers_ID, eIndustry industry, int? companySize, WebSite? website, RegistrationNumber registration_Number,
                         string company_Name, Person contact_Person)
         {
+            ValidateName(company_Name);
             ValidateIndustry(industry);
             ValidateID(employers_ID);
             ValidateSize(companySize);
@@ -44,6 +45,7 @@ namespace Domain.Entities
         private Employers(eIndustry industry, int? companySize, WebSite? website, RegistrationNumber registration_Number, string company_Name,
                         Person contact_Person)
         {
+            ValidateName(company_Name);
             ValidateIndustry(industry);
             ValidateSize(companySize);
             Industry = industry;
@@ -68,6 +70,8 @@ namespace Domain.Entities
         public void UpdateEmployer(eIndustry industry, int? companySize, WebSite? website,
                         string company_Name, Person contact_Person)
         {
+            ValidateName(company_Name);
+            ValidateSize(companySize);
             ValidateIndustry(industry);
             this.Industry = industry;
             this.CompanySize = companySize;
@@ -80,22 +84,31 @@ namespace Domain.Entities
 
 
 
-
+        private void ValidateName(string name)
+        {
+            ///Validate the Name
+            if (string.IsNullOrEmpty(name))
+                throw InvalidEmployerException.MissingCompanyName();
+        
+        
+        
+        }
         private void ValidateSize(int? companySize)
         {
             if (companySize < 1)
-                throw new InvalidEmployerException("Invalid Size");
+                throw InvalidEmployerException.InvalidCompanySize(companySize);
         }
         
         private void ValidateID(int id)
         {
             if (id < 1)
-                throw new InvalidEmployerException("Invalid Id");
+                throw DomainException.Invalid_ID(id);
         }
         private void ValidateIndustry(eIndustry industry)
         {
+            
             if (!Enum.IsDefined(typeof(eIndustry), industry))
-                throw new InvalidEmployerException("Invalid industry");
+                throw InvalidEmployerException.InvalidIndustry();
         }
 
 

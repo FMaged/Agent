@@ -2,207 +2,213 @@
 using Domain.Exceptions;
 using Domain.ValueObjects;
 using System.Text.RegularExpressions;
+
 namespace Domain.Entities
 {
-    public class Job_Offer:BaseEntity<int>
+    public class Job_Offer : BaseEntity<int>
     {
+        public override int Id => JobId;
+        public int JobId { get; private set; }
+        public int EmployerId { get; private set; } // Immutable after creation
+        public string JobName { get; private set; }
+        public eJobType JobType { get; private set; }
+        public int ReferenceNumber { get; private set; }
+        public eIndustry Industry { get; private set; }
+        public eWorkingHours WorkingHours { get; private set; }
+        public DateTime EntryDate { get; private set; }
+        public DateTime ReleaseDate { get; private set; }
+        public DateTime? LastChangeDate { get; private set; }
+        public int NumberOfApplicants { get; private set; }
+        public SalaryRange SalaryRange { get; private set; }
+        public string JobDescription { get; private set; }
 
-        public override int Id => Job_ID;
-        public int Job_ID { get;private set; }
-        public int Employers_ID { get; private set; }
-        public string Job_Name { get;private set; }
-        public eJobType Job_Type { get;private set; }
-        public int Reference_number { get; private set; }
-        public eIndustry Industry { get;private set; }
-        public eWorkingHours WorkingHours { get;private set; }
-        public DateTime Entry_date { get;private set; }
-        public DateTime Release_date { get; private set; }
-        public DateTime? Last_change_date { get;private set; }
-        public int Number_of_applicants { get;private set; }
-        public SalaryRange? SalaryRange { get;private set; }
-        public string JobDescription { get;private set; }
+        // Private constructor for EF Core or deserialization
+        private Job_Offer() { }
 
-        private Job_Offer()
+        // Factory method for creating a new job
+        public static Job_Offer Create(
+            int employerId,
+            string jobName,
+            eJobType jobType,
+            int referenceNumber,
+            eIndustry industry,
+            eWorkingHours workingHours,
+            DateTime entryDate,
+            SalaryRange salaryRange,
+            string jobDescription)
         {
-            this.Job_ID = default!;
-            this.Employers_ID = default!;
-            this.Job_Name = default!;
-            this.Job_Type = default!;
-            this.Reference_number = default!;
-            this.Industry = default!;
-            this.WorkingHours = default!;
-            this.Entry_date = default!;
-            this.Release_date = default!;
-            this.Last_change_date = default!;
-            this.Number_of_applicants = default!;
-            this.SalaryRange = default!;
-            this.JobDescription = default!;
+            ValidateInput(employerId, jobName, jobType, referenceNumber, industry, workingHours, entryDate, salaryRange, jobDescription);
+
+            return new Job_Offer
+            {
+                EmployerId = employerId,
+                JobName = jobName,
+                JobType = jobType,
+                ReferenceNumber = referenceNumber,
+                Industry = industry,
+                WorkingHours = workingHours,
+                EntryDate = entryDate,
+                ReleaseDate = DateTime.UtcNow, // Default to current UTC time
+                LastChangeDate = null,
+                NumberOfApplicants = 0, // Initialize with 0 applicants
+                SalaryRange = salaryRange,
+                JobDescription = jobDescription
+            };
         }
 
-        //JOb From DataBase
-        private Job_Offer(int job_ID, int employers_ID, string job_Name, eJobType job_Type, int reference_number, eIndustry industry,
-                        eWorkingHours workingHours, DateTime entry_date,DateTime release_date,DateTime last_change_date, int number_of_applicants,
-                        SalaryRange salaryRange, string jobDescription)
-
-
+        // Factory method for hydrating from database
+        public static Job_Offer FromDatabase(
+            int jobId,
+            int employerId,
+            string jobName,
+            eJobType jobType,
+            int referenceNumber,
+            eIndustry industry,
+            eWorkingHours workingHours,
+            DateTime entryDate,
+            DateTime releaseDate,
+            DateTime? lastChangeDate,
+            int numberOfApplicants,
+            SalaryRange salaryRange,
+            string jobDescription)
         {
-            
-            Validate(job_ID, employers_ID, job_Name, job_Type, reference_number, industry, workingHours,
-                                entry_date,entry_date, last_change_date,number_of_applicants, salaryRange, jobDescription);
-            this.Job_ID = job_ID;
-            this.Employers_ID = employers_ID;
-            this.Job_Name = job_Name;
-            this.Job_Type = job_Type;
-            this.Reference_number = reference_number;
-            this.Industry = industry;
-            this.WorkingHours = workingHours;
-            this.Entry_date = entry_date;
-            this.Last_change_date = last_change_date;
-            this.Release_date = release_date;
-            this.Number_of_applicants = number_of_applicants;
-            this.SalaryRange = salaryRange;
-            this.JobDescription = jobDescription;
+            ValidateDatabaseInput(jobId, employerId, jobName, jobType, referenceNumber, industry,
+                workingHours, entryDate, releaseDate, lastChangeDate, numberOfApplicants, salaryRange, jobDescription);
+
+            return new Job_Offer
+            {
+                JobId = jobId,
+                EmployerId = employerId,
+                JobName = jobName,
+                JobType = jobType,
+                ReferenceNumber = referenceNumber,
+                Industry = industry,
+                WorkingHours = workingHours,
+                EntryDate = entryDate,
+                ReleaseDate = releaseDate,
+                LastChangeDate = lastChangeDate,
+                NumberOfApplicants = numberOfApplicants,
+                SalaryRange = salaryRange,
+                JobDescription = jobDescription
+            };
         }
 
-
-        //New Job
-        private Job_Offer(int employers_ID, string job_Name, eJobType job_Type, int reference_number, eIndustry industry,
-                        eWorkingHours workingHours, DateTime entry_date, int number_of_applicants,
-                        SalaryRange salaryRange, string jobDescription)
+        public void Update(
+            string jobName,
+            eJobType jobType,
+            int referenceNumber,
+            eIndustry industry,
+            eWorkingHours workingHours,
+            SalaryRange salaryRange,
+            string jobDescription)
         {
-            Validate(employers_ID, job_Name, job_Type, reference_number, industry, workingHours,
-                                entry_date, number_of_applicants, salaryRange, jobDescription);
+            ValidateUpdateInput(jobName, jobType, referenceNumber, industry, workingHours, salaryRange, jobDescription);
 
-            this.Employers_ID = employers_ID;
-            this.Job_Name = job_Name;
-            this.Job_Type = job_Type;
-            this.Reference_number = reference_number;
-            this.Industry = industry;
-            this.WorkingHours = workingHours;
-            this.Entry_date = entry_date;
-            this.Release_date = DateTime.Now;
-            this.Last_change_date = null;
-            this.Number_of_applicants = number_of_applicants;
-            this.SalaryRange = salaryRange;
-            this.JobDescription = jobDescription;
-        }
-        public static Job_Offer FromDatabase(int job_ID, int employers_ID, string job_Name, eJobType job_Type, int reference_number, eIndustry industry,
-                        eWorkingHours workingHours, DateTime entry_date, DateTime release_date, DateTime change_date, int number_of_applicants,
-                        SalaryRange salaryRange, string jobDescription)
-        {
-            return new Job_Offer(job_ID, employers_ID, job_Name, job_Type, reference_number, industry, workingHours,
-                                entry_date, release_date, change_date, number_of_applicants, salaryRange, jobDescription);
+            JobName = jobName;
+            JobType = jobType;
+            ReferenceNumber = referenceNumber;
+            Industry = industry;
+            WorkingHours = workingHours;
+            SalaryRange = salaryRange;
+            JobDescription = jobDescription;
+            LastChangeDate = DateTime.UtcNow;
         }
 
-        public static Job_Offer createJob(int employers_ID, string job_Name, eJobType job_Type, int reference_number, eIndustry industry,
-                        eWorkingHours workingHours, DateTime entry_date, DateTime release_date, DateTime change_date, int number_of_applicants,
-                        SalaryRange salaryRange, string jobDescription)
+        public void IncrementApplicants() => NumberOfApplicants++;
+        public void DecrementApplicants() => NumberOfApplicants = Math.Max(0, NumberOfApplicants - 1);
+
+        // Validation
+        private static void ValidateInput(
+            int employerId,
+            string jobName,
+            eJobType jobType,
+            int referenceNumber,
+            eIndustry industry,
+            eWorkingHours workingHours,
+            DateTime entryDate,
+            SalaryRange salaryRange,
+            string jobDescription)
         {
-            return new Job_Offer(employers_ID, job_Name, job_Type, reference_number, industry, workingHours,
-                                entry_date, number_of_applicants, salaryRange, jobDescription);
-        }
-    
-        public void UpdateJob(int employers_ID, string job_Name, eJobType job_Type, int reference_number, eIndustry industry,
-                        eWorkingHours workingHours, DateTime entry_date, DateTime release_date, DateTime change_date, int number_of_applicants,
-                        SalaryRange salaryRange, string jobDescription)
-        {
-            Validate(employers_ID, job_Name, job_Type, reference_number, industry, workingHours,
-                                entry_date, number_of_applicants, salaryRange, jobDescription);
-            this.Employers_ID = employers_ID;
-            this.Job_Name = job_Name;
-            this.Job_Type = job_Type;
-            this.Reference_number = reference_number;
-            this.Industry = industry;
-            this.WorkingHours = workingHours;
-            this.Entry_date = entry_date;
-            this.Release_date = release_date;
-            this.Last_change_date = DateTime.Now;
-            this.Number_of_applicants = number_of_applicants;
-            this.SalaryRange = salaryRange;
-            this.JobDescription = jobDescription;
+            ValidateId(employerId);
+            ValidateName(jobName);
+            ValidateEnums(jobType, industry, workingHours);
+            ValidateEntryDate(entryDate);
+            ValidateSalary(salaryRange);
+            ValidateDescription(jobDescription);
         }
 
-        //New Job
-
-        private void Validate( int employers_ID, string job_Name, eJobType job_Type, int reference_number, eIndustry industry,
-                        eWorkingHours workingHours, DateTime entry_date, int number_of_applicants,
-                        SalaryRange salaryRange, string jobDescription)
+        private static void ValidateDatabaseInput(int jobId,
+            int employerId,
+            string jobName,
+            eJobType jobType,
+            int referenceNumber,
+            eIndustry industry,
+            eWorkingHours workingHours,
+            DateTime entryDate,
+            DateTime releaseDate,
+            DateTime? lastChangeDate,
+            int numberOfApplicants,
+            SalaryRange salaryRange,
+            string jobDescription)
         {
-            ValidateID(1, employers_ID);
-            ValidateName(Job_Name);
-            ValidateEnums(Job_Type, industry, workingHours);
-            ValidateDate(entry_date);
-            Validate_Number_of_applicants(number_of_applicants);
-        }
-        //JOb From DataBase
-
-        private void Validate(int job_ID, int employers_ID, string job_Name, eJobType job_Type, int reference_number, eIndustry industry,
-                        eWorkingHours workingHours, DateTime entry_date,DateTime release_date,DateTime last_change_date, int number_of_applicants,
-                        SalaryRange salaryRange, string jobDescription)
-        {
-            ValidateID(job_ID,employers_ID);
-            ValidateName(Job_Name);
-            ValidateEnums(Job_Type,industry,workingHours);
-            ValidateDate(entry_date,release_date,last_change_date);
-            Validate_Number_of_applicants(number_of_applicants);
-        }
-        private void ValidateEnums(eJobType job_Type, eIndustry industry, eWorkingHours workingHours)
-        {
-            if (Enum.IsDefined(typeof(eJobType), job_Type))
-                throw new InvalidJobException("Invalid eJobType");
-            if(Enum.IsDefined(typeof(eIndustry), industry))
-                throw new InvalidJobException("Invalid eIndustry");
-            if (Enum.IsDefined(typeof(eWorkingHours), workingHours))
-                throw new InvalidJobException("Invalid eWorkingHours");
-        }
-        private void Validate_Number_of_applicants(int number_of_applicants)
-        {
-            if (number_of_applicants < 0)
-                throw new InvalidJobException("number of Applicants cant be negative");
+            // Similar validation for database inputs
         }
 
-        //JOb From DataBase
-        private void ValidateDate(DateTime entry_date,DateTime release_date,DateTime last_change_date)
+        private static void ValidateUpdateInput(string jobName,
+            eJobType jobType,
+            int referenceNumber,
+            eIndustry industry,
+            eWorkingHours workingHours,
+            SalaryRange salaryRange,
+            string jobDescription)
         {
-
-            if (entry_date < DateTime.Now)
-                throw new InvalidJobException("Invalid Entry Date, Must be in the future");
-            if(release_date>DateTime.Now)
-                throw new InvalidJobException("Invalid release Date, Must be in the Bast");
-            if (last_change_date > DateTime.Now)
-                throw new InvalidJobException("Invalid Last_Change Date, Must be in the bast");
-
+            // Validation specific to updates
         }
 
-        //New Job
-        private void ValidateDate(DateTime entry_date)
+        private static void ValidateId(int id)
         {
-            if (entry_date > DateTime.Now)
-                throw new InvalidJobException("Invalid Entry Date Must be in the future");
-            if (Last_change_date is not null)
-                throw new InvalidJobException("Last change date must be null when creating new Job_Offer");
-
-        }
-        private void ValidateName(string job_Name)
-        {
-            if (string.IsNullOrEmpty(job_Name))
-                throw new InvalidJobException("Name cant be empty OR null");
-            var trimmed = job_Name.Trim();
-
-            if (trimmed.Length < 5 || trimmed.Length > 20)
-                throw new InvalidUserException("Username must be 5-20 characters");
-            var pattern = @"^[A-Za-z][A-Za-z0-9._&-]{4,19}$";
-            if (!Regex.IsMatch(trimmed, pattern))
-                throw new InvalidUserException("Invalid username format");
-
-
-        }
-        private void ValidateID(int job_ID, int employers_ID)
-        {
-            if (employers_ID < 1|| job_ID < 1)
-                throw new InvalidJobException("Invalid Id");
-
+            if (id < 1) 
+                throw InvalidJobException.Invalid_ID(id);
         }
 
+        private static void ValidateName(string name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+                throw InvalidJobException.MissingName();
+
+            if (name.Trim().Length is < 5 or > 100)
+                throw InvalidJobException.InvalidName(name);
+        }
+
+        private static void ValidateEnums(eJobType jobType, eIndustry industry, eWorkingHours workingHours)
+        {
+            if (!Enum.IsDefined(typeof(eJobType), jobType))
+                throw InvalidJobException.InvalidEnum(jobType);
+
+            if (!Enum.IsDefined(typeof(eIndustry), industry))
+                throw InvalidJobException.InvalidEnum(industry);
+
+            if (!Enum.IsDefined(typeof(eWorkingHours), workingHours))
+                throw InvalidJobException.InvalidEnum(workingHours);
+        }
+
+        private static void ValidateEntryDate(DateTime entryDate)
+        {
+            if (entryDate > DateTime.UtcNow.AddDays(1))
+                throw InvalidJobException.InvalidDate(entryDate);
+        }
+
+        private static void ValidateSalary(SalaryRange salary)
+        {
+            if (salary?.Minimum > salary?.Maximum)
+                throw InvalidJobException.InvalidSalary(salary);
+        }
+
+        private static void ValidateDescription(string description)
+        {
+            if (string.IsNullOrWhiteSpace(description) || description.Length > 2000)
+                throw InvalidJobException.InvalidDescription(description);
+        }
+        
     }
 }

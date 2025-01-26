@@ -1,6 +1,5 @@
 ﻿using Domain.Enums;
 using Domain.Exceptions;
-using System.Globalization;
 
 namespace Domain.Entities
 {
@@ -77,19 +76,19 @@ namespace Domain.Entities
         private void ValidateID(int id)
         {
             if (id < 1)
-                throw new InvalidJobApplicationException("Invalid ID");
+                throw DomainException.Invalid_ID(id);
         }
         private void ValidateApplicationDate(DateTime newDate)
         {
             if (newDate > DateTime.Now)
-                throw new InvalidJobApplicationException("Application cant be in the future");
+                throw InvalidJobApplicationException.InvalidDate(newDate);
             if (newDate < DateTime.Now.AddYears(-120))
-                throw new InvalidPersonException("Invalid date");
+                throw InvalidJobApplicationException.InvalidDate(newDate);
         }
         private void ValidateStatus(eApplicationsStatus status)
         {
             if (!Enum.IsDefined(typeof(eApplicationsStatus), status))
-                throw new InvalidJobApplicationException("Invalid Status");
+                throw InvalidJobApplicationException.InvalidStatus();
 
 
         }

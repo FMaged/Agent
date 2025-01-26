@@ -2,6 +2,9 @@
 
 namespace Domain.Entities;
 
+
+
+//Why storing it in the Database with ID
 public class Address : BaseEntity<int>
 {
     public override int Id => Address_ID;
@@ -42,11 +45,26 @@ public class Address : BaseEntity<int>
             House_Number = houseNumber
         };
     }
-    private static void Validate(string plz, string town, string street, string houseNumber)
+    private static void Validate(string plz, string town, string street, string houseNumber,int Id= 0)
     {
-        if (string.IsNullOrWhiteSpace(plz)) throw new InvalidAddressException("PLZ is required");
-        if (plz.Length != 5 || !int.TryParse(plz, out _)) throw new InvalidAddressException("PLZ must be 5 digits");
+        
+        if (string.IsNullOrWhiteSpace(street)) throw InvalidAddressException.MissingStreet();
+        if(string.IsNullOrWhiteSpace(houseNumber)) throw InvalidAddressException.MissingHouseNumber();
+        if (string.IsNullOrWhiteSpace(plz)) throw InvalidAddressException.MissingPLZ();
+        if(string.IsNullOrWhiteSpace(town)) throw InvalidAddressException.MissingTown();
+
+        
+
+
+        if (plz.Length != 5 || !int.TryParse(plz, out _)) throw InvalidAddressException.InvalidPLZ(plz);
+
         // validation...
+
+
+
+
+
+
     }
 
 

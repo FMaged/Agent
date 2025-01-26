@@ -87,8 +87,9 @@ namespace Domain.Entities
         }
 
 
-        public void UpdatePerson(string firstName, string lastName, Email email, PhoneNumber phoneNumber, Address personAddress)
+        public void UpdatePerson( Email email, PhoneNumber phoneNumber, Address personAddress)
         {
+
             this.email = email;
             Phone_Number = phoneNumber;
             address = personAddress;
@@ -96,23 +97,27 @@ namespace Domain.Entities
 
         private static void ValidateName(string firstName, string lastName)
         {
-            if (string.IsNullOrWhiteSpace(firstName) || firstName.Length > 50)
-                throw new InvalidPersonException("First name must be 1-50 characters");
-            if (string.IsNullOrWhiteSpace(lastName) || lastName.Length > 50)
-                throw new InvalidPersonException("Last name must be 1-50 characters");
+            if (string.IsNullOrWhiteSpace(firstName))
+                throw InvalidPersonException.MissingName();
+            if (string.IsNullOrWhiteSpace(lastName))
+                throw InvalidPersonException.MissingName();
+
+            if (firstName.Length > 50)
+                throw InvalidPersonException.InvalidName(firstName);
+            if(lastName.Length > 50)
+                throw InvalidPersonException.InvalidName(lastName);
 
         }
         private static void ValidateBirth(DateTime dateOfBirth)
         {   
-            if (dateOfBirth > DateTime.Now.AddYears(-18))
-                throw new InvalidPersonException("Person must be at least 18 years old");
-            if (dateOfBirth < DateTime.Now.AddYears(-120))
-                throw new InvalidPersonException("Invalid date of birth");
+            if (dateOfBirth > DateTime.Now.AddYears(-18)|| dateOfBirth < DateTime.Now.AddYears(-120))
+                throw InvalidPersonException.InvalidDate(dateOfBirth);
+       
 
         }
         private static eGender ValidateGender(eGender gender)
         {
-            return Enum.IsDefined(typeof(eGender), gender) ? gender : throw new InvalidPersonException("Invalid Gender");
+            return Enum.IsDefined(typeof(eGender), gender) ? gender : throw InvalidPersonException.InvalidGender();
         }
 
     }
