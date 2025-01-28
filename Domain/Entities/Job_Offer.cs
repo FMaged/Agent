@@ -8,8 +8,8 @@ namespace Domain.Entities
     public class Job_Offer : BaseEntity<int>
     {
         public override int Id => JobId;
-        public int JobId { get; private set; }
-        public int EmployerId { get; private set; } // Immutable after creation
+        public int JobId { get; private set; }// Immutable after creation
+        public Employer employer { get; private set; } 
         public string JobName { get; private set; }
         public eJobType JobType { get; private set; }
         public int ReferenceNumber { get; private set; }

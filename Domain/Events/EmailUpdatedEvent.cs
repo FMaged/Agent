@@ -1,12 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
+using Domain.ValueObjects;
 
 namespace Domain.Events
 {
-    internal class EmailUpdatedEvent
+    public class EmailUpdatedEvent:DomainEvent
     {
+        public Email OldEmail { get;}
+        public Email NewEmail { get;}
+
+        public EmailUpdatedEvent(Email oldEmail, Email newEmail)
+        {
+            OldEmail = oldEmail;
+            NewEmail = newEmail;
+        }
+
     }
 }

@@ -6,7 +6,7 @@ using Domain.Exceptions;
 
 namespace Domain.Entities
 {
-    public class Employers:BaseEntity<int>
+    public class Employer:BaseEntity<int>
     {
         public override int Id => Employers_ID;
         public int Employers_ID { get;private set; }
@@ -17,7 +17,7 @@ namespace Domain.Entities
         public string Company_Name { get;private set; }
         public Person Contact_Person { get;private set; }
 
-        private Employers() 
+        private Employer() 
         {
             Employers_ID = default!;
             Industry = default!;
@@ -27,7 +27,7 @@ namespace Domain.Entities
             Company_Name = default!;
             Contact_Person = default!;
         }
-        private Employers(int employers_ID, eIndustry industry, int? companySize, WebSite? website, RegistrationNumber registration_Number,
+        private Employer(int employers_ID, eIndustry industry, int? companySize, WebSite? website, RegistrationNumber registration_Number,
                         string company_Name, Person contact_Person)
         {
             ValidateName(company_Name);
@@ -42,7 +42,7 @@ namespace Domain.Entities
             Company_Name = company_Name;
             Contact_Person = contact_Person;
         }
-        private Employers(eIndustry industry, int? companySize, WebSite? website, RegistrationNumber registration_Number, string company_Name,
+        private Employer(eIndustry industry, int? companySize, WebSite? website, RegistrationNumber registration_Number, string company_Name,
                         Person contact_Person)
         {
             ValidateName(company_Name);
@@ -55,17 +55,17 @@ namespace Domain.Entities
             Company_Name = company_Name;
             Contact_Person = contact_Person;
         }
-        public static Employers FromDatabase(int employers_ID, eIndustry industry, int? companySize, WebSite? website, RegistrationNumber registration_Number,
+        public static Employer FromDatabase(int employers_ID, eIndustry industry, int? companySize, WebSite? website, RegistrationNumber registration_Number,
                         string company_Name, Person contact_Person)
         {
-            return new Employers(employers_ID, industry, companySize, website,registration_Number,company_Name, contact_Person);
+            return new Employer(employers_ID, industry, companySize, website,registration_Number,company_Name, contact_Person);
         }
 
 
-        public static Employers CreateEmployer(eIndustry industry, int? companySize, WebSite? website, RegistrationNumber registration_Number, string company_Name,
+        public static Employer CreateEmployer(eIndustry industry, int? companySize, WebSite? website, RegistrationNumber registration_Number, string company_Name,
                         Person contact_Person)
         {
-            return new Employers(industry, companySize, website,registration_Number, company_Name, contact_Person);
+            return new Employer(industry, companySize, website,registration_Number, company_Name, contact_Person);
         }
         public void UpdateEmployer(eIndustry industry, int? companySize, WebSite? website,
                         string company_Name, Person contact_Person)

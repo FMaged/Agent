@@ -1,12 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
+using Domain.Entities;
 
 namespace Domain.Events
 {
-    internal class EmployeeCreatedEvent
+    public class EmployeeCreatedEvent:DomainEvent
     {
+        public Employee CreatedEmployee { get;}
+
+
+        public EmployeeCreatedEvent(Employee employee)
+        {
+            CreatedEmployee = employee;
+        }
+
+
+
     }
 }

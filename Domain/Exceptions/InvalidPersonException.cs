@@ -12,8 +12,8 @@
             => new InvalidPersonException("Date is required",
                                           "PERSON_MISSING_DATE");
         public static InvalidPersonException MissingEnum()
-    => new InvalidPersonException("Gender is required",
-                                  "PERSON_MISSING_GENDER");
+                => new InvalidPersonException("Gender is required",
+                                              "PERSON_MISSING_GENDER");
 
 
 

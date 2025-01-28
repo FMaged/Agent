@@ -1,50 +1,56 @@
 ﻿using Domain.Enums;
 using Domain.Exceptions;
+using Domain.Events;
 
 namespace Domain.Entities
 {
-    public class Employees:BaseEntity<int>
+    public class Employee:BaseEntity<int>
     {
         public override int Id => Employees_ID;
         public int Employees_ID { get;private set; }
         public string? Position { get;private set; }
         public eEmployeesStatus? Status { get;private set; }
-        public int Employees_Person_ID { get;private set; }
+        public Person Employees_Person { get;private set; }
 
-        private Employees()
+        private Employee()
         {
             Employees_ID = default!;
             Position = default!;
             Status = default!;
-            Employees_Person_ID = default!;
+            Employees_Person = default!;
         }
-        private Employees(int employees_ID, string position, eEmployeesStatus status, int employees_person_ID)
+        private Employee(int employees_ID, string position, eEmployeesStatus status, Person employees_person)
         {
             ValidateStatus(status);
-            ValidateID(employees_person_ID);
             ValidateID(employees_ID);
             Employees_ID = employees_ID;
             Position = position;
             Status = status;
-            Employees_Person_ID = employees_person_ID;
+            Employees_Person = employees_person;
         }
-        private Employees(string position, eEmployeesStatus status, int employees_person_ID)
+        private Employee(string position, eEmployeesStatus status, Person employees_person)
         {
-            ValidateStatus(status);
-            ValidateID(employees_person_ID);
-            
+            ValidateStatus(status);            
             Position = position;
             Status = status;
-            Employees_Person_ID = employees_person_ID;
+            Employees_Person = employees_person;
+
+
+            //will it Work giving (this) inside of the Constructer ?????
+            AddDomainEvent(new EmployeeCreatedEvent(this));
+
         }
 
-        public static Employees FromDatabase(int employees_ID, string position, eEmployeesStatus status, int employees_person_ID)
+        public static Employee FromDatabase(int employees_ID, string position, eEmployeesStatus status, Person employees_person)
         {
-            return new Employees(employees_ID,position, status, employees_person_ID);
+            return new Employee(employees_ID,position, status, employees_person);
         }
-        public static Employees CreateEmployee(string position, eEmployeesStatus status, int employees_person_ID)
+        public static Employee CreateEmployee(string position, eEmployeesStatus status, Person employees_person)
         {
-            return new Employees(position, status, employees_person_ID);
+            Employee CreatedEmployee = new Employee(position, status, employees_person);
+            return CreatedEmployee;
+
+
         }
         public void UpdateEmployee(string position, eEmployeesStatus status)
         {

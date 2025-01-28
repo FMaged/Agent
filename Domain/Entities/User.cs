@@ -29,7 +29,7 @@ namespace Domain.user.Aggregate
         private User(eUserRole role)
         {
             if (role != eUserRole.Guest)
-                throw new InvalidUserException("This constructor is for Guest users only");
+                throw InvalidUserException.InvalidRolePermeation();
 
             // maybe make a Table to store the Guests!
             userName = default!;
@@ -79,10 +79,10 @@ namespace Domain.user.Aggregate
         public void Register(UserName username, Password passwordHash, Person person)
         {
             if (Role != eUserRole.Guest)
-                throw InvalidUserException.InvalidRolePermition();
+                throw InvalidUserException.InvalidRolePermeation();
 
-            userName = username ?? throw new ArgumentNullException(nameof(username));
-            PasswordHash = passwordHash ?? throw new ArgumentNullException(nameof(passwordHash));
+            userName = username ?? throw InvalidUserException.MissingUserName();
+            PasswordHash = passwordHash ?? throw InvalidUserException.MissingPassword();
 
             Role = eUserRole.User; // Default role after registration
         }
@@ -91,24 +91,24 @@ namespace Domain.user.Aggregate
         public void ChangeUsername(UserName newUsername)
         {
             if (Role == eUserRole.Guest)
-                throw InvalidUserException.InvalidRolePermition();
+                throw InvalidUserException.InvalidRolePermeation();
 
-            userName = newUsername ?? throw new ArgumentNullException(nameof(newUsername));
+            userName = newUsername ?? throw InvalidUserException.MissingUserName();
         }
 
         // Domain behavior: Change password (for registered users)
         public void ChangePassword(Password newPasswordHash)
         {
             if (Role == eUserRole.Guest)
-                throw InvalidUserException.InvalidRolePermition();
+                throw InvalidUserException.InvalidRolePermeation();
 
-            PasswordHash = newPasswordHash ?? throw new ArgumentNullException(nameof(newPasswordHash));
+            PasswordHash = newPasswordHash ?? throw InvalidUserException.MissingPassword(); ;
         }
 
         // Validation logic
         private eUserRole ValidateRole(eUserRole role)
         {
-            return Enum.IsDefined(typeof(eUserRole), role) ? role : throw InvalidUserException.InvalidRolePermition();
+            return Enum.IsDefined(typeof(eUserRole), role) ? role : throw InvalidUserException.InvalidRolePermeation();
 
         }
 

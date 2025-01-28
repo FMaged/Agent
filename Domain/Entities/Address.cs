@@ -1,4 +1,5 @@
 ﻿using Domain.Exceptions;
+using Domain.Events;
 
 namespace Domain.Entities;
 
@@ -45,6 +46,24 @@ public class Address : BaseEntity<int>
             House_Number = houseNumber
         };
     }
+
+    public void UpdateAddress(string plz, string town, string street, string houseNumber, int Id= 0)
+    {
+        Address oldAddress=Address.Create(plz, town, street, houseNumber);
+        Validate(plz, town, street, houseNumber);
+        PLZ = plz;
+        Town = town;
+        Street = street;
+        House_Number = houseNumber;
+
+
+
+
+        AddDomainEvent(new AddressChangedEvent(oldAddress, this));
+    }
+
+
+
     private static void Validate(string plz, string town, string street, string houseNumber,int Id= 0)
     {
         

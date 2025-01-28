@@ -9,10 +9,11 @@ namespace Domain.ValueObjects
         public Email(string value)
         {
             if (string.IsNullOrWhiteSpace(value))
-                throw new InvalidEmailException("Email cannot be empty");
-            var pattern = @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"; var Trimmed = value.Trim();
+                throw InvalidEmailException.MissingEmail();
+            var pattern = @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$";
+            var Trimmed = value.Trim();
             if (!Regex.IsMatch(Trimmed, pattern))
-                throw new InvalidEmailException("Invalid email format");
+                throw InvalidEmailException.InvalidEmail(this);
             Value = Trimmed;
 
 

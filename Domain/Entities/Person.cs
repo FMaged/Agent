@@ -2,6 +2,8 @@
 using Domain.ValueObjects;
 using Domain.Exceptions;
 using Domain.Enums;
+using Domain.Events;
+
 
 namespace Domain.Entities
 {
@@ -13,7 +15,7 @@ namespace Domain.Entities
         public string Last_Name { get; private set; }
         public DateTime Date_Of_Birth { get; private set; }
         public eGender Gender { get; private set; }
-        public Email email { get; private set; }
+        public Email EmailAddress { get; private set; }
         public PhoneNumber Phone_Number { get; private set; }
         public Address address { get; private set; }
 
@@ -24,7 +26,7 @@ namespace Domain.Entities
             Last_Name = default!;
             Date_Of_Birth = default!;
             Gender = default!;
-            email = default!;
+            EmailAddress = default!;
             Phone_Number = default!;
             address = default!;
 
@@ -37,7 +39,7 @@ namespace Domain.Entities
             Last_Name = lastName;
             Date_Of_Birth = dateOfBirth;
             Gender = ValidateGender(gender);
-            this.email = email;
+            this.EmailAddress = email;
             Phone_Number = phoneNumber;
             address = personAddress;
 
@@ -52,7 +54,7 @@ namespace Domain.Entities
             Last_Name = lastName;
             Date_Of_Birth = dateOfBirth;
             Gender = ValidateGender(gender);
-            this.email = email;
+            this.EmailAddress = email;
             Phone_Number = phoneNumber;
             address = personAddress;
         }
@@ -86,11 +88,28 @@ namespace Domain.Entities
 
         }
 
+        public void Update(Email email)
+        {
+            Email OldEmail = this.EmailAddress;
+            this.EmailAddress = email;
 
+            AddDomainEvent(new EmailUpdatedEvent(OldEmail,this.EmailAddress));
+        }
+        public void Update(PhoneNumber phoneNumber)
+        {
+
+ 
+            Phone_Number = phoneNumber;
+
+        }
+        public void Update( Address personAddress)
+        {
+            address = personAddress;
+        }
         public void UpdatePerson( Email email, PhoneNumber phoneNumber, Address personAddress)
         {
 
-            this.email = email;
+            this.EmailAddress = email;
             Phone_Number = phoneNumber;
             address = personAddress;
         }
