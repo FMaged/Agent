@@ -14,5 +14,12 @@ namespace Domain.Events
             NewEmail = newEmail;
         }
 
+
+
+
+        public override string ToString()
+        {
+            return $"Status changed [Old: {OldEmail}, New: {NewEmail}]";
+        }
     }
 }

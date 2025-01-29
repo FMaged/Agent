@@ -1,12 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
+using Domain.ValueObjects;
 
 namespace Domain.Events
 {
-    internal class PasswordChangedEvent
+    public class PasswordChangedEvent:DomainEvent
     {
+        public Password OldPassword { get; }
+        public Password NewPassword { get; }
+
+        public PasswordChangedEvent() { }
+        public PasswordChangedEvent(Password oldPassword, Password newPassword)
+        {
+            OldPassword = oldPassword;
+            NewPassword = newPassword;
+
+
+        }
+
+
+
+
     }
 }

@@ -1,12 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
+using Domain.Entities;
 
 namespace Domain.Interfaces
 {
-    internal class IEmployeeRepository
+    public interface IEmployeeRepository
     {
+        // Basic CRUD operations
+        Employee GetById(int employeeId);
+        void Add(Employee employee);
+        void Update(Employee employee);
+        void Delete(int employeeId);
+
+
+
+        // Domain-specific queries
+        Employee FindByEmail(string email);
+
+
+
     }
 }

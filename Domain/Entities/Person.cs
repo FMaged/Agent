@@ -98,9 +98,9 @@ namespace Domain.Entities
         public void Update(PhoneNumber phoneNumber)
         {
 
- 
+            PhoneNumber oldNumber=this.Phone_Number;
             Phone_Number = phoneNumber;
-
+            AddDomainEvent(new PhoneNumberUpdatedEvent(oldNumber, this.Phone_Number));
         }
         public void Update( Address personAddress)
         {

@@ -1,8 +1,7 @@
 ﻿using Domain.Enums;
 using Domain.Exceptions;
 using Domain.ValueObjects;
-using System.Text.RegularExpressions;
-
+using Domain.Events;
 namespace Domain.Entities
 {
     public class Job_Offer : BaseEntity<int>
@@ -23,11 +22,26 @@ namespace Domain.Entities
         public string JobDescription { get; private set; }
 
         // Private constructor for EF Core or deserialization
-        private Job_Offer() { }
+        private Job_Offer() 
+        {
+            JobId = default!;
+            employer = default!;
+            JobName = default!;
+            JobType = default!;
+            ReferenceNumber = default!;
+            Industry = default!;
+            WorkingHours = default!;
+            EntryDate = default!;
+            ReleaseDate = default!;
+            LastChangeDate = default!;
+            NumberOfApplicants = default!;
+            SalaryRange = default!;
+            JobDescription = default!;
+        }
 
         // Factory method for creating a new job
         public static Job_Offer Create(
-            int employerId,
+            Employer employerId,
             string jobName,
             eJobType jobType,
             int referenceNumber,
@@ -37,11 +51,11 @@ namespace Domain.Entities
             SalaryRange salaryRange,
             string jobDescription)
         {
-            ValidateInput(employerId, jobName, jobType, referenceNumber, industry, workingHours, entryDate, salaryRange, jobDescription);
+            ValidateInput(jobName, jobType, referenceNumber, industry, workingHours, entryDate, salaryRange, jobDescription);
 
-            return new Job_Offer
+            Job_Offer CreatedJob= new Job_Offer
             {
-                EmployerId = employerId,
+                employer = employerId,
                 JobName = jobName,
                 JobType = jobType,
                 ReferenceNumber = referenceNumber,
@@ -54,12 +68,15 @@ namespace Domain.Entities
                 SalaryRange = salaryRange,
                 JobDescription = jobDescription
             };
+
+            CreatedJob.AddDomainEvent(new JobOfferCreatedEvent(CreatedJob));
+            return CreatedJob;
         }
 
         // Factory method for hydrating from database
         public static Job_Offer FromDatabase(
             int jobId,
-            int employerId,
+            Employer employerId,
             string jobName,
             eJobType jobType,
             int referenceNumber,
@@ -72,13 +89,13 @@ namespace Domain.Entities
             SalaryRange salaryRange,
             string jobDescription)
         {
-            ValidateDatabaseInput(jobId, employerId, jobName, jobType, referenceNumber, industry,
+            ValidateDatabaseInput(jobId, jobName, jobType, referenceNumber, industry,
                 workingHours, entryDate, releaseDate, lastChangeDate, numberOfApplicants, salaryRange, jobDescription);
 
             return new Job_Offer
             {
                 JobId = jobId,
-                EmployerId = employerId,
+                employer = employerId,
                 JobName = jobName,
                 JobType = jobType,
                 ReferenceNumber = referenceNumber,
@@ -103,7 +120,7 @@ namespace Domain.Entities
             string jobDescription)
         {
             ValidateUpdateInput(jobName, jobType, referenceNumber, industry, workingHours, salaryRange, jobDescription);
-
+            Job_Offer oldJob = this;
             JobName = jobName;
             JobType = jobType;
             ReferenceNumber = referenceNumber;
@@ -112,6 +129,9 @@ namespace Domain.Entities
             SalaryRange = salaryRange;
             JobDescription = jobDescription;
             LastChangeDate = DateTime.UtcNow;
+
+
+            AddDomainEvent(new JobOfferUpdatedEvent(oldJob, this));
         }
 
         public void IncrementApplicants() => NumberOfApplicants++;
@@ -119,7 +139,6 @@ namespace Domain.Entities
 
         // Validation
         private static void ValidateInput(
-            int employerId,
             string jobName,
             eJobType jobType,
             int referenceNumber,
@@ -129,7 +148,6 @@ namespace Domain.Entities
             SalaryRange salaryRange,
             string jobDescription)
         {
-            ValidateId(employerId);
             ValidateName(jobName);
             ValidateEnums(jobType, industry, workingHours);
             ValidateEntryDate(entryDate);
@@ -138,7 +156,6 @@ namespace Domain.Entities
         }
 
         private static void ValidateDatabaseInput(int jobId,
-            int employerId,
             string jobName,
             eJobType jobType,
             int referenceNumber,

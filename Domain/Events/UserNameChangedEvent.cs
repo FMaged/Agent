@@ -1,12 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
+using Domain.ValueObjects;
 
 namespace Domain.Events
 {
-    internal class UserNameChangedEvent
+    public class UserNameChangedEvent:DomainEvent
     {
+        public UserName OldUserName { get;}
+        public UserName NewUserName { get;}
+
+
+        public UserNameChangedEvent() { }
+
+        public UserNameChangedEvent(UserName oldUserName, UserName newUserName)
+        {
+            OldUserName = oldUserName;  
+            NewUserName = newUserName;
+        }
+
+
+
+
+
     }
 }

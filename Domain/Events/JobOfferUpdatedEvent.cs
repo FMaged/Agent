@@ -1,12 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
+using Domain.Entities;
 
 namespace Domain.Events
 {
-    internal class JobOfferUpdatedEvent
+    public class JobOfferUpdatedEvent:DomainEvent
     {
+        public Job_Offer OldJob { get;}
+        public Job_Offer NewJob { get;}
+
+
+        public JobOfferUpdatedEvent() { }
+
+
+        public JobOfferUpdatedEvent(Job_Offer oldJob, Job_Offer newJob)
+        {
+            OldJob = oldJob;
+            NewJob = newJob;
+
+        }
+
+
+
+
+
+
+
     }
 }

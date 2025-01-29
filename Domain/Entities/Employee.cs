@@ -9,7 +9,7 @@ namespace Domain.Entities
         public override int Id => Employees_ID;
         public int Employees_ID { get;private set; }
         public string? Position { get;private set; }
-        public eEmployeesStatus? Status { get;private set; }
+        public eEmployeesStatus Status { get; private set; } = eEmployeesStatus.Active;
         public Person Employees_Person { get;private set; }
 
         private Employee()
@@ -52,6 +52,28 @@ namespace Domain.Entities
 
 
         }
+
+
+
+
+        public void Update(string position)
+        {
+            Position = position;
+        
+        
+        
+        }
+        public void Update(eEmployeesStatus status)
+        {
+            ValidateStatus(status);
+            eEmployeesStatus OldStatus = this.Status;
+            Status= status;
+
+            AddDomainEvent(new EmployeeStatusUpdatedEvent(OldStatus,this.Status));
+        }
+
+
+
         public void UpdateEmployee(string position, eEmployeesStatus status)
         {
             ValidateStatus(status);

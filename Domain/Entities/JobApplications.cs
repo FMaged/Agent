@@ -1,5 +1,6 @@
 ﻿using Domain.Enums;
 using Domain.Exceptions;
+using Domain.Events;
 
 namespace Domain.Entities
 {
@@ -37,7 +38,8 @@ namespace Domain.Entities
             Status = status;
         }
 
-        private JobApplications(Job_Offer job, Employer EMployer, Employee EMployee, DateTime application_Date, eApplicationsStatus status)
+        private JobApplications(Job_Offer job, Employer EMployer, Employee EMployee, DateTime application_Date, 
+                                eApplicationsStatus status)
         {
             ValidateApplicationDate(application_Date);
             ValidateStatus(status);
@@ -48,24 +50,26 @@ namespace Domain.Entities
             Status = status;
         }
 
-        public static JobApplications FromDatabase(int application_ID, Job_Offer job_ID, Employer employers_ID, Employee employee_ID, DateTime application_Date,
-                                                    eApplicationsStatus status)
+        public static JobApplications FromDatabase(int application_ID, Job_Offer job_ID, Employer employers_ID, Employee employee_ID,
+                                                    DateTime application_Date, eApplicationsStatus status)
         {
 
             return new JobApplications(application_ID, job_ID, employers_ID, employee_ID, application_Date, status);
 
         }
-        public static JobApplications CreateApplication(Job_Offer job_ID, Employer employers_ID, Employee employee_ID, DateTime application_Date,
-                                                        eApplicationsStatus status)
+        public static JobApplications CreateApplication(Job_Offer job_ID, Employer employers_ID, Employee employee_ID, 
+                                                        DateTime application_Date, eApplicationsStatus status)
         {
-            return new JobApplications(job_ID, employers_ID, employee_ID, application_Date, status);
-
-
+            JobApplications createdApplication= new JobApplications(job_ID, employers_ID, employee_ID, application_Date, status);
+            createdApplication.AddDomainEvent(new JobApplicationCreatedEvent(createdApplication));
+            return createdApplication;
         }
         public void UpdateStatus(eApplicationsStatus status)
         {
+            eApplicationsStatus oldStatus=this.Status;
             ValidateStatus(status);
             Status = status;
+            AddDomainEvent(new JobApplicationStatusUpdatedEvent(oldStatus, this.Status));
         }
         private void ValidateID(int id)
         {

@@ -1,12 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
+using Domain.Entities;
 
 namespace Domain.Interfaces
 {
-    internal class IJob_ApplicationsRepository
+    public interface IJob_ApplicationsRepository
     {
+        JobApplications GetById(int jobApplicationId);
+        void Add(JobApplications jobApplication);
+        void Update(JobApplications jobApplication);
+        void Delete(int jobApplicationId);
+
+
+
+
+
+
     }
 }

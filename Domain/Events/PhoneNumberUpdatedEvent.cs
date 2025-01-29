@@ -1,12 +1,30 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
+using Domain.ValueObjects;
 
 namespace Domain.Events
 {
-    internal class PhoneNumberUpdatedEvent
+    public class PhoneNumberUpdatedEvent:DomainEvent
     {
+        public PhoneNumber OldNumber { get;}
+        public PhoneNumber NewNumber { get;}
+
+        public PhoneNumberUpdatedEvent() { }
+
+
+        public PhoneNumberUpdatedEvent(PhoneNumber oldNumber,PhoneNumber newNumber) 
+        {
+            OldNumber = oldNumber;
+            NewNumber = newNumber;
+        }
+
+
+
+
+
+
+
+
+
+
     }
 }

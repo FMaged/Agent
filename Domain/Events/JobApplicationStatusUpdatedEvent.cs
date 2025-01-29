@@ -1,12 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
+using Domain.Enums;
 
 namespace Domain.Events
 {
-    internal class JobApplicationStatusUpdatedEvent
+    public class JobApplicationStatusUpdatedEvent:DomainEvent
     {
+        public eApplicationsStatus OldStatus { get;}
+        public eApplicationsStatus NewStatus { get;}
+
+        public JobApplicationStatusUpdatedEvent() { }
+
+        public JobApplicationStatusUpdatedEvent(eApplicationsStatus oldStatus, eApplicationsStatus newStatus)
+        {
+            OldStatus = oldStatus;
+            NewStatus = newStatus;
+        }
+
+
+
+
+
+
     }
 }

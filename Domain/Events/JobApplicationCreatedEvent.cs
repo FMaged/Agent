@@ -1,12 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
+using Domain.Entities;
 
 namespace Domain.Events
 {
-    internal class JobApplicationCreatedEvent
+    public class JobApplicationCreatedEvent:DomainEvent
     {
+        public JobApplications jobApplication {  get;}
+
+
+        public JobApplicationCreatedEvent() { }
+
+        public  JobApplicationCreatedEvent(JobApplications jobApplication)
+        {
+            this.jobApplication = jobApplication;
+        }
+
+
+
+
+
+
+
     }
 }

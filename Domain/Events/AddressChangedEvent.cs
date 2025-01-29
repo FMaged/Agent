@@ -19,5 +19,12 @@ namespace Domain.Events
 
 
 
+        /// <summary>
+        /// Returns a string representation of the event
+        /// </summary>
+        public override string ToString()
+        {
+            return $"Address Changed [Old: {OldAddress}, New: {NewAddress}]";
+        }
     }
 }

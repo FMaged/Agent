@@ -2,6 +2,7 @@
 using Domain.Enums;
 using Domain.ValueObjects;
 using Domain.Exceptions;
+using Domain.Events;
 
 
 namespace Domain.Entities
@@ -65,11 +66,14 @@ namespace Domain.Entities
         public static Employer CreateEmployer(eIndustry industry, int? companySize, WebSite? website, RegistrationNumber registration_Number, string company_Name,
                         Person contact_Person)
         {
-            return new Employer(industry, companySize, website,registration_Number, company_Name, contact_Person);
+            Employer NewEmployer =new Employer(industry, companySize, website,registration_Number, company_Name, contact_Person);
+            NewEmployer.AddDomainEvent(new EmployerCreatedEvent(NewEmployer));
+            return NewEmployer;
         }
         public void UpdateEmployer(eIndustry industry, int? companySize, WebSite? website,
                         string company_Name, Person contact_Person)
         {
+            Employer oldEmployer = this;
             ValidateName(company_Name);
             ValidateSize(companySize);
             ValidateIndustry(industry);
@@ -79,6 +83,9 @@ namespace Domain.Entities
             this.Company_Name = company_Name;
             this.Contact_Person = contact_Person;
 
+
+
+            AddDomainEvent(new EmployerUpdatedEvent(oldEmployer, this));
         }
 
 

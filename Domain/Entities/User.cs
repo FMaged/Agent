@@ -2,11 +2,12 @@
 using Domain.Entities;
 using Domain.Enums;
 using Domain.Exceptions;
+using Domain.Events;
 
 namespace Domain.user.Aggregate
 {
     public class User:BaseEntity<int>
-    {
+    {   
         public override int Id => UserID;
         public int UserID { get; private set; }
         public UserName userName { get; private set; }
@@ -85,24 +86,29 @@ namespace Domain.user.Aggregate
             PasswordHash = passwordHash ?? throw InvalidUserException.MissingPassword();
 
             Role = eUserRole.User; // Default role after registration
+            AddDomainEvent(new UserRegisteredEvent(this));
         }
 
         // Domain behavior: Change username (for registered users)
         public void ChangeUsername(UserName newUsername)
         {
+            UserName oldUserName = this.userName;
             if (Role == eUserRole.Guest)
                 throw InvalidUserException.InvalidRolePermeation();
 
             userName = newUsername ?? throw InvalidUserException.MissingUserName();
+            AddDomainEvent(new UserNameChangedEvent(oldUserName, this.userName));
         }
 
         // Domain behavior: Change password (for registered users)
         public void ChangePassword(Password newPasswordHash)
         {
+            Password oldPassword=this.PasswordHash;
             if (Role == eUserRole.Guest)
                 throw InvalidUserException.InvalidRolePermeation();
 
-            PasswordHash = newPasswordHash ?? throw InvalidUserException.MissingPassword(); ;
+            PasswordHash = newPasswordHash ?? throw InvalidUserException.MissingPassword();
+            AddDomainEvent(new PasswordChangedEvent(oldPassword, this.PasswordHash);
         }
 
         // Validation logic

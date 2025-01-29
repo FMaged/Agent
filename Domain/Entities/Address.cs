@@ -49,7 +49,7 @@ public class Address : BaseEntity<int>
 
     public void UpdateAddress(string plz, string town, string street, string houseNumber, int Id= 0)
     {
-        Address oldAddress=Address.Create(plz, town, street, houseNumber);
+        Address oldAddress = this;
         Validate(plz, town, street, houseNumber);
         PLZ = plz;
         Town = town;
@@ -89,5 +89,9 @@ public class Address : BaseEntity<int>
 
 
 
+    public override string ToString()
+    {
+        return $"Address => Id:{Address_ID}, PLZ: {PLZ}, Town: {Town}, Street: {Street}, House Number: {House_Number}.";
+    }
 
 }
